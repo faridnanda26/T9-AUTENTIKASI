@@ -1,0 +1,74 @@
+generator client {
+    provider = "prisma-client"
+    output = "../generated/prisma"
+}
+
+datasource db {
+    provider = "mysql"
+}
+
+enum Category {
+  MAKANAN
+  MINUMAN
+  CEMILAN
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(150)
+  category  Category
+  price     Decimal  @db.Decimal(12, 2)
+  stock     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  reviews   ProductReview[]
+  orders  Order[]
+
+  @@map("products")
+}
+
+model ProductReview {
+  id        Int      @id @default(autoincrement())
+  reviewer  String   @db.VarChar(100)
+  comment   String   @db.Text
+  rating    Int
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("product_reviews")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  total     Decimal  @db.Decimal(12, 2)
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("orders")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(100)
+  passwordHash String   @db.VarChar(100)
+  role         String   @default("customer") @db.VarChar(20)
+  createdAt    DateTime @default(now())
+
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(500)
+  userId    Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}

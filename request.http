@@ -1,0 +1,131 @@
+@baseUrl = http://localhost:3000
+@apiKey = rahasia123456
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk1NzU4NzM0LCJleHAiOjE3OTU3NTk2MzR9.cmioSt0ZGvZ4QHFIeecxYqEhjAXd1TTu-HDdh653ErM
+@refresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzk1NzU4NzM0LCJleHAiOjE3OTYzNjM1MzR9.MclHRJbVDc0I5oSIm_id2N8eRfeQwlISckX1BRA94AE
+
+### GET all product: 200
+GET {{baseUrl}}/product
+Authorization: Bearer {{token}}
+
+### GET product category: 200
+GET {{baseUrl}}/product?category=MAKANAN
+Authorization: Bearer {{token}}
+
+### GET product ID: 200
+GET {{baseUrl}}/product/7
+Authorization: Bearer {{token}}
+
+### GET product review: 200
+GET {{baseUrl}}/product/5/reviews
+Authorization: Bearer {{token}}
+
+### GET product id not integer: 400
+GET {{baseUrl}}/product/abc
+Authorization: Bearer {{token}}
+
+### GET endpoint not found: 404
+GET {{baseUrl}}/product/1/abc
+Authorization: Bearer {{token}}
+
+### POST product: 201
+POST {{baseUrl}}/product
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Pocari",
+    "category": "MINUMAN",
+    "price": 15000.00,
+    "stock": 33
+}
+
+### POST product Unauthorized: 401
+POST {{baseUrl}}/product
+Content-Type: application/json
+
+{
+    "name": "Pocari",
+    "category": "MINUMAN",
+    "price": 15000.00,
+    "stock": 33
+}
+
+### POST product validation error: 422
+POST {{baseUrl}}/product
+Content-Type: application/json
+Authorization: Bearer {{token}} 
+
+{
+    "name": "Pocari",
+    "category": "MINUMAN",
+    "price": -15000.00,
+    "stock": 33
+}
+
+### PUT product: 200
+PUT {{baseUrl}}/product/4
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Sambel ikan",
+    "category": "MINUMAN",
+    "price": 35000.00,
+    "stock": 33
+}
+
+### DELETE product: 204
+DELETE {{baseUrl}}/product/1
+Authorization: Bearer {{token}}
+
+### GET all order: 200
+GET {{baseUrl}}/order
+Authorization: Bearer {{token}}
+
+### POST order: 201
+POST {{baseUrl}}/order
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "productId": 4,
+    "quantity": 5
+}
+
+### GET saya: 200
+GET {{baseUrl}}/auth/saya
+Authorization: Bearer {{token}}
+
+### POST register: 201
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "tes1@gmail.com",
+    "password": "rahasiaaja"
+}
+
+### POST login: 200
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "tes1@gmail.com",
+    "password": "rahasiaaja"
+}
+
+### POST refresh: 200
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+    "refreshToken": "{{refresh}}"
+}
+
+### POST logout: 204
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "{{refresh}}"
+}
